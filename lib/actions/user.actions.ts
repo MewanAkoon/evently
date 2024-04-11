@@ -3,14 +3,16 @@
 import { revalidatePath } from 'next/cache';
 
 import { connectToDatabase } from '@/lib/database';
-import User from '@/lib/database/models/user.model';
-import Order from '@/lib/database/models/order.model';
-import Event from '@/lib/database/models/event.model';
+import User, { UserDocument } from '@/lib/database/models/user.model';
+// import Order from '@/lib/database/models/order.model';
+// import Event from '@/lib/database/models/event.model';
 import { handleError } from '@/lib/utils';
 
 import { CreateUserParams, UpdateUserParams } from '@/types';
 
-export async function createUser(user: CreateUserParams) {
+export async function createUser(
+	user: CreateUserParams
+): Promise<UserDocument | undefined> {
 	try {
 		await connectToDatabase();
 
@@ -34,7 +36,10 @@ export async function getUserById(userId: string) {
 	}
 }
 
-export async function updateUser(clerkId: string, user: UpdateUserParams) {
+export async function updateUser(
+	clerkId: string,
+	user: UpdateUserParams
+): Promise<UserDocument | undefined> {
 	try {
 		await connectToDatabase();
 
@@ -61,19 +66,19 @@ export async function deleteUser(clerkId: string) {
 		}
 
 		// Unlink relationships
-		await Promise.all([
-			// Update the 'events' collection to remove references to the user
-			Event.updateMany(
-				{ _id: { $in: userToDelete.events } },
-				{ $pull: { organizer: userToDelete._id } }
-			),
+		// await Promise.all([
+		// 	// Update the 'events' collection to remove references to the user
+		// 	Event.updateMany(
+		// 		{ _id: { $in: userToDelete.events } },
+		// 		{ $pull: { organizer: userToDelete._id } }
+		// 	),
 
-			// Update the 'orders' collection to remove references to the user
-			Order.updateMany(
-				{ _id: { $in: userToDelete.orders } },
-				{ $unset: { buyer: 1 } }
-			),
-		]);
+		// 	// Update the 'orders' collection to remove references to the user
+		// 	Order.updateMany(
+		// 		{ _id: { $in: userToDelete.orders } },
+		// 		{ $unset: { buyer: 1 } }
+		// 	),
+		// ]);
 
 		// Delete user
 		const deletedUser = await User.findByIdAndDelete(userToDelete._id);

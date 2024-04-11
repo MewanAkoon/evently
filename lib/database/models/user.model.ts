@@ -1,6 +1,15 @@
-import { Schema, model, models } from 'mongoose';
+import { Document, Model, Schema, model, models } from 'mongoose';
 
-const UserSchema = new Schema({
+export interface UserDocument extends Document {
+	clerkId: string;
+	email: string;
+	username: string;
+	firstName: string;
+	lastName: string | null;
+	photo: string;
+}
+
+const userSchema = new Schema<UserDocument>({
 	clerkId: { type: String, required: true, unique: true },
 	email: { type: String, required: true, unique: true },
 	username: { type: String, required: true, unique: true },
@@ -9,6 +18,8 @@ const UserSchema = new Schema({
 	photo: { type: String, required: true },
 });
 
-const User = models.User || model('User', UserSchema);
+userSchema.index({ clerkId: 1 });
+
+const User: Model<UserDocument> = models.User || model('User', userSchema);
 
 export default User;

@@ -1,6 +1,6 @@
-import { Schema, model, models, Document } from 'mongoose';
+import { Schema, model, models, Document, Model } from 'mongoose';
 
-export interface IOrder extends Document {
+export interface OrderDocument extends Document {
 	createdAt: Date;
 	stripeId: string;
 	totalAmount: string;
@@ -15,7 +15,7 @@ export interface IOrder extends Document {
 	};
 }
 
-export type IOrderItem = {
+export type OrderItem = {
 	_id: string;
 	totalAmount: string;
 	createdAt: Date;
@@ -24,7 +24,7 @@ export type IOrderItem = {
 	buyer: string;
 };
 
-const OrderSchema = new Schema({
+const orderSchema = new Schema<OrderDocument>({
 	createdAt: {
 		type: Date,
 		default: Date.now,
@@ -47,6 +47,6 @@ const OrderSchema = new Schema({
 	},
 });
 
-const Order = models.Order || model('Order', OrderSchema);
+const Order: Model<OrderDocument> = models.Order || model('Order', orderSchema);
 
 export default Order;
