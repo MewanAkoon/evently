@@ -12,18 +12,18 @@ import { CreateUserParams, UpdateUserParams } from '@/types';
 
 export async function createUser(
 	user: CreateUserParams
-): Promise<UserDocument | undefined> {
+): Promise<UserDocument> {
 	try {
 		await connectToDatabase();
 
 		const newUser = await User.create(user);
 		return JSON.parse(JSON.stringify(newUser));
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 
-export async function getUserById(userId: string) {
+export async function getUserById(userId: string): Promise<UserDocument> {
 	try {
 		await connectToDatabase();
 
@@ -32,14 +32,14 @@ export async function getUserById(userId: string) {
 		if (!user) throw new Error('User not found');
 		return JSON.parse(JSON.stringify(user));
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 
 export async function updateUser(
 	clerkId: string,
 	user: UpdateUserParams
-): Promise<UserDocument | undefined> {
+): Promise<UserDocument> {
 	try {
 		await connectToDatabase();
 
@@ -50,7 +50,7 @@ export async function updateUser(
 		if (!updatedUser) throw new Error('User update failed');
 		return JSON.parse(JSON.stringify(updatedUser));
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 
@@ -86,6 +86,6 @@ export async function deleteUser(clerkId: string) {
 
 		return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null;
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }

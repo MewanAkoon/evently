@@ -1,6 +1,7 @@
 import { Document, Model, Schema, model, models } from 'mongoose';
 
 export interface CategoryDocument extends Document {
+	_id: string;
 	name: string;
 }
 

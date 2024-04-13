@@ -3,29 +3,30 @@ import { UserDocument } from './user.model';
 import { CategoryDocument } from './category.model';
 
 export interface EventDocument extends Document {
+	_id: string;
 	title: string;
-	description: string | null;
-	location: string | null;
+	description: string;
+	location: string;
 	createdAt: Date;
 	imageUrl: string;
 	startDateTime: Date;
 	endDateTime: Date;
-	price: string;
+	price: string | null;
 	isFree: boolean;
 	url: string | null;
 	category: Pick<CategoryDocument, '_id' | 'name'>;
 	organizer: Pick<UserDocument, '_id' | 'firstName' | 'lastName'>;
 }
 
-const eventSchema = new Schema({
+const eventSchema = new Schema<EventDocument>({
 	title: { type: String, required: true },
-	description: { type: String, default: null },
-	location: { type: String, default: null },
+	description: { type: String, required: true },
+	location: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now },
 	imageUrl: { type: String, required: true },
 	startDateTime: { type: Date, default: Date.now },
 	endDateTime: { type: Date, default: Date.now },
-	price: { type: String, required: true },
+	price: { type: String, default: null },
 	isFree: { type: Boolean, default: false },
 	url: { type: String, default: null },
 	category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
